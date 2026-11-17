@@ -54,11 +54,11 @@
 
             vulkan-memory-allocator
 
+            vulkan-volk
+
             ktx-tools
 
             glm
-
-            vulkan-volk
           ];
 
           shellHook = ''
