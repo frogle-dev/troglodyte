@@ -1,0 +1,8 @@
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 100
+
+# east const
+QualifierAlignment: Custom
+QualifierOrder: ['type', 'const', 'volatile']
