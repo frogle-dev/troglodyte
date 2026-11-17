@@ -70,3 +70,5 @@ Testing/
 # direnv
 .direnv/
 .envrc
+
+.xmake/
