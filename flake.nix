@@ -40,6 +40,7 @@
             shader-slang
 
             vulkan-tools
+            vulkan-tools-lunarg
 
             renderdoc
           ];
@@ -61,13 +62,11 @@
             glm
           ];
 
-          shellHook = ''
-            export VK_LAYER_PATH=${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d
-            export VK_ADD_LAYER_PATH=$VK_LAYER_PATH
-            export LD_LIBRARY_PATH=${
-              pkgs.lib.makeLibraryPath [ pkgs.vulkan-loader ]
-            }''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-          '';
+          VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+          LD_LIBRARY_PATH = "${
+            pkgs.lib.makeLibraryPath [ pkgs.vulkan-loader ]
+          }\${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}";
+          VULKAN_SDK = "${pkgs.vulkan-headers}";
 
           hardeningDisable = [ "fortify" ];
         };
