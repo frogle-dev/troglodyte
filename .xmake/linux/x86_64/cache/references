@@ -1,0 +1,24 @@
+{
+    packages = {
+        "/home/jonah/.xmake/packages/v/vulkan-headers/1.4.335+0/a1c87328203147cfa4c5272cf78b6d5b",
+        "/home/jonah/.xmake/packages/v/vulkan-memory-allocator/v3.4.0/c83ce8b4ddf142759ead9e49f56e3157",
+        "/home/jonah/.xmake/packages/u/util-macros/1.20.0/21ebacb0450b4b16b06b586ecc142d3f",
+        "/home/jonah/.xmake/packages/x/xorgproto/2023.2/22469615461f49aebbfa4e10af6edb62",
+        "/home/jonah/.xmake/packages/l/libxau/1.0.12/f28a3a7249e64bfeafc481e65ce195a9",
+        "/home/jonah/.xmake/packages/l/libxdmcp/1.1.5/fac034d258af4aada2c864884ac5f660",
+        "/home/jonah/.xmake/packages/l/libffi/3.4.8/46686cf534074f4ebf90e4ab1f9662dd",
+        "/home/jonah/.xmake/packages/o/openssl/1.1.1-w/6c51ab6278e2479b883dffafac69fdaf",
+        "/home/jonah/.xmake/packages/c/ca-certificates/20250131/e9ba281ae183402a80dc072d4d571c20",
+        "/home/jonah/.xmake/packages/p/python/3.14.3/5b29e409d339499392171d61390dfc38",
+        "/home/jonah/.xmake/packages/x/xcb-proto/1.17.0/eafb62cb3f37412ebe648eb0ab4b4b35",
+        "/home/jonah/.xmake/packages/l/libpthread-stubs/0.5/e6c09af522624eb1ae863fe21c4aa62c",
+        "/home/jonah/.xmake/packages/l/libxcb/1.17.0/37052fd83b89473abd67102965ff1e6c",
+        "/home/jonah/.xmake/packages/x/xtrans/1.6.0/588d85a9c99148b8ae87dee11b39ab40",
+        "/home/jonah/.xmake/packages/l/libx11/1.8.13/fa5de29573fd426583b062bb45cc2a89",
+        "/home/jonah/.xmake/packages/m/m4/1.4.19/8b7c7260096844c1a8b1c8d773e64b3d",
+        "/home/jonah/.xmake/packages/m/meson/1.12.1/4422ec0eefae43d68b0abd8c3a52a56f",
+        "/home/jonah/.xmake/packages/l/libxml2/v2.14.3/0d66487e0de34b419fad31daa41c7c91",
+        "/home/jonah/.xmake/packages/e/expat/2.10.0/6f1664b549444332b95f4cca1865e023",
+        "/home/jonah/.xmake/packages/b/bison/3.8.2/9487e874749340f7949f47fa547bc060"
+    }
+}

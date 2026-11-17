@@ -1,0 +1,128 @@
+{
+    ["vulkan-headers"] = {
+        __requirestr = "vulkan-headers",
+        version = "1.4.335+0",
+        sysincludedirs = "/home/jonah/.xmake/packages/v/vulkan-headers/1.4.335+0/a1c87328203147cfa4c5272cf78b6d5b/include",
+        installdir = "/home/jonah/.xmake/packages/v/vulkan-headers/1.4.335+0/a1c87328203147cfa4c5272cf78b6d5b",
+        license = "Apache-2.0",
+        envs = {
+            PATH = {
+                "/home/jonah/.xmake/packages/n/ninja/v1.13.2/0a9451759a4647b5923438b464085dd6/bin",
+                "/home/jonah/.xmake/packages/c/cmake/4.3.4/478c5cdb1d4b47ff91b42b2ceeb382a8/bin"
+            }
+        },
+        __enabled = true
+    },
+    ["vulkan-memory-allocator"] = {
+        __requirestr = "vulkan-memory-allocator",
+        version = "v3.4.0",
+        sysincludedirs = {
+            "/home/jonah/.xmake/packages/v/vulkan-memory-allocator/v3.4.0/c83ce8b4ddf142759ead9e49f56e3157/include",
+            "/home/jonah/.xmake/packages/v/vulkan-headers/1.4.335+0/a1c87328203147cfa4c5272cf78b6d5b/include"
+        },
+        installdir = "/home/jonah/.xmake/packages/v/vulkan-memory-allocator/v3.4.0/c83ce8b4ddf142759ead9e49f56e3157",
+        license = "MIT",
+        envs = {
+            PATH = {
+                "/home/jonah/.xmake/packages/n/ninja/v1.13.2/0a9451759a4647b5923438b464085dd6/bin",
+                "/home/jonah/.xmake/packages/c/cmake/4.3.4/478c5cdb1d4b47ff91b42b2ceeb382a8/bin"
+            }
+        },
+        __enabled = true
+    },
+    glm = {
+        __requirestr = "glm",
+        version = "1.0.3",
+        sysincludedirs = "/nix/store/38nppy83k1bwikzwqk36082dcwdh66kr-glm-1.0.3/include",
+        __enabled = true
+    },
+    volk = {
+        __requirestr = "volk",
+        links = "volk",
+        sysincludedirs = "/home/jonah/.xmake/packages/v/vulkan-headers/1.4.335+0/a1c87328203147cfa4c5272cf78b6d5b/include",
+        __enabled = true,
+        envs = {
+            PATH = {
+                "/home/jonah/.xmake/packages/n/ninja/v1.13.2/0a9451759a4647b5923438b464085dd6/bin",
+                "/home/jonah/.xmake/packages/c/cmake/4.3.4/478c5cdb1d4b47ff91b42b2ceeb382a8/bin"
+            }
+        }
+    },
+    ktx = {
+        __requirestr = "ktx",
+        links = "ktx",
+        envs = {
+            PATH = {
+                "/home/jonah/.xmake/packages/n/ninja/v1.13.2/0a9451759a4647b5923438b464085dd6/bin",
+                "/home/jonah/.xmake/packages/c/cmake/4.3.4/478c5cdb1d4b47ff91b42b2ceeb382a8/bin",
+                "/home/jonah/.xmake/packages/p/pkg-config/0.29.2/a0aba256d7674c1bbee15f0ee1534e92/bin"
+            }
+        },
+        __enabled = true
+    },
+    libsdl3 = {
+        __requirestr = "libsdl3",
+        links = "SDL3",
+        sysincludedirs = "/nix/store/2ggbf9k8wlkfqgvz33x1d592csgmkj4p-sdl3-3.4.18-dev/include",
+        __enabled = true,
+        shflags = {
+            "-Wl,-rpath,/nix/store/yx8d504p8a5dm612j4vwrzfbz2jvkhwv-sdl3-3.4.18-lib/lib",
+            "-Wl,--enable-new-dtags"
+        },
+        linkdirs = "/nix/store/yx8d504p8a5dm612j4vwrzfbz2jvkhwv-sdl3-3.4.18-lib/lib",
+        envs = {
+            LD_LIBRARY_PATH = {
+                "/home/jonah/.xmake/packages/l/libxau/1.0.12/f28a3a7249e64bfeafc481e65ce195a9/lib",
+                "/home/jonah/.xmake/packages/l/libxdmcp/1.1.5/fac034d258af4aada2c864884ac5f660/lib",
+                "/home/jonah/.xmake/packages/l/libxcb/1.17.0/37052fd83b89473abd67102965ff1e6c/lib",
+                "/home/jonah/.xmake/packages/l/libx11/1.8.13/fa5de29573fd426583b062bb45cc2a89/lib",
+                "/home/jonah/.xmake/packages/l/libxfixes/6.0.1/32cbba7be85a4185b00b52ca82de8150/lib",
+                "/home/jonah/.xmake/packages/l/libxrender/0.9.12/504f602166aa49fcb7386ef0f2d67c9b/lib",
+                "/home/jonah/.xmake/packages/l/libxext/1.3.7/f2028efa1de84bdb8bcf174232090114/lib"
+            },
+            SSL_CERT_FILE = {
+                "/home/jonah/.xmake/packages/c/ca-certificates/20250131/e9ba281ae183402a80dc072d4d571c20/cacert.pem"
+            },
+            SSL_CERT_DIR = {
+                "/home/jonah/.xmake/packages/c/ca-certificates/20250131/e9ba281ae183402a80dc072d4d571c20"
+            },
+            PATH = {
+                "/home/jonah/.xmake/packages/n/ninja/v1.13.2/0a9451759a4647b5923438b464085dd6/bin",
+                "/home/jonah/.xmake/packages/c/cmake/4.3.4/478c5cdb1d4b47ff91b42b2ceeb382a8/bin",
+                "/home/jonah/.xmake/packages/p/pkg-config/0.29.2/a0aba256d7674c1bbee15f0ee1534e92/bin",
+                "/home/jonah/.xmake/packages/p/pkg-config/0.29.2/a0aba256d7674c1bbee15f0ee1534e92/bin",
+                "/home/jonah/.xmake/packages/p/python/3.14.3/5b29e409d339499392171d61390dfc38/bin",
+                "/home/jonah/.xmake/packages/p/python/3.14.3/5b29e409d339499392171d61390dfc38/bin",
+                "/home/jonah/.xmake/packages/p/python/3.14.3/5b29e409d339499392171d61390dfc38/Scripts",
+                "/home/jonah/.xmake/packages/m/m4/1.4.19/8b7c7260096844c1a8b1c8d773e64b3d/bin",
+                "/home/jonah/.xmake/packages/a/autoconf/2.72/acf1540df7454fb895001231995955f2/bin",
+                "/home/jonah/.xmake/packages/a/automake/1.17/023583104f8e4bd8aa209b66cbeb4bee/bin",
+                "/home/jonah/.xmake/packages/l/libtool/2.6.0/e0bdba70c39545bb9c3dcc8050ee49d5/bin",
+                "/home/jonah/.xmake/packages/m/meson/1.12.1/4422ec0eefae43d68b0abd8c3a52a56f/bin",
+                "/home/jonah/.xmake/packages/b/bison/3.8.2/9487e874749340f7949f47fa547bc060/bin",
+                "/home/jonah/.xmake/packages/b/bison/3.8.2/9487e874749340f7949f47fa547bc060/bin"
+            },
+            PYTHONPATH = {
+                "/home/jonah/.xmake/packages/p/python/3.14.3/5b29e409d339499392171d61390dfc38/lib/python3.14/site-packages",
+                "/home/jonah/.xmake/packages/m/meson/1.12.1/4422ec0eefae43d68b0abd8c3a52a56f"
+            }
+        },
+        version = "3.4.18",
+        shared = true,
+        ldflags = {
+            "-Wl,-rpath,/nix/store/yx8d504p8a5dm612j4vwrzfbz2jvkhwv-sdl3-3.4.18-lib/lib",
+            "-Wl,--enable-new-dtags"
+        },
+        libfiles = "/nix/store/yx8d504p8a5dm612j4vwrzfbz2jvkhwv-sdl3-3.4.18-lib/lib/libSDL3.so"
+    },
+    tinyobjloader = {
+        __requirestr = "tinyobjloader",
+        libfiles = "/nix/store/jmc5hpykgqbzjblqv9ragdg7n5s7gyji-tinyobjloader-1.0.7/lib/libtinyobjloader.a",
+        sysincludedirs = "/nix/store/jmc5hpykgqbzjblqv9ragdg7n5s7gyji-tinyobjloader-1.0.7/include",
+        __enabled = true,
+        version = "1.0.4",
+        linkdirs = "/nix/store/jmc5hpykgqbzjblqv9ragdg7n5s7gyji-tinyobjloader-1.0.7/lib",
+        static = true,
+        links = "tinyobjloader"
+    }
+}

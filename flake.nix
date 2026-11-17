@@ -33,29 +33,40 @@
 
             pkg-config
 
-            valgrind
+            gdb
             gf
-
-            sdl3
-
-            vulkan-headers
-            vulkan-loader
-            vulkan-validation-layers
-            vulkan-tools
-            vulkan-tools-lunarg
-
-            ktx-tools
 
             shaderc
             shader-slang
 
+            vulkan-tools
+
             renderdoc
+          ];
+
+          buildInputs = with pkgs; [
+            tinyobjloader
+
+            sdl3
+
+            vulkan-headers
+            vulkan-validation-layers
+
+            vulkan-memory-allocator
+
+            ktx-tools
+
+            glm
+
+            vulkan-volk
           ];
 
           shellHook = ''
             export VK_LAYER_PATH=${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d
             export VK_ADD_LAYER_PATH=$VK_LAYER_PATH
-            export LD_LIBRARY_PATH=${pkgs.vulkan-loader}/lib:${pkgs.renderdoc}/lib:$LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH=${
+              pkgs.lib.makeLibraryPath [ pkgs.vulkan-loader ]
+            }''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
           '';
 
           hardeningDisable = [ "fortify" ];
