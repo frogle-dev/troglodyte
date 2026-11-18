@@ -4,6 +4,8 @@ set_languages("c++23")
 set_warnings("all", "extra", "error", "pedantic")
 set_defaultmode("debug")
 
+add_cxxflags("-Wno-error=missing-designated-field-initializers")
+
 add_requires(
   "vulkan-headers",
   "vulkan-memory-allocator",

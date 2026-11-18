@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <print>
-#include <ranges>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
@@ -12,6 +11,8 @@
 #define VULKAN_HPP_NO_CONSTRUCTORS
 #include <vulkan/vulkan.hpp>
 #include <vulkan/vulkan_raii.hpp>
+
+#include <vk_mem_alloc.h>
 
 // constexpr int WIDTH = 800;
 // constexpr int HEIGHT = 800;
@@ -29,6 +30,8 @@ static inline void chk(vk::Result result) {
         exit(EXIT_FAILURE);
     }
 }
+
+static inline void chk(VkResult result) { chk(static_cast<vk::Result>(result)); }
 
 template <typename T> static inline auto chk(vk::ResultValue<T> &&resultValue) -> T {
     if (resultValue.result != vk::Result::eSuccess) {
@@ -78,9 +81,9 @@ auto main(int argc, char *argv[]) -> int {
 
     auto queueFamilies = physicalDevice.getQueueFamilyProperties();
     uint32_t gfxQueueFamilyIdx = 0;
-    for (auto [idx, queueFamily] : std::views::enumerate(queueFamilies)) {
-        if (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics) {
-            gfxQueueFamilyIdx = idx;
+    for (size_t i = 0; i < queueFamilies.size(); i++) {
+        if (queueFamilies[i].queueFlags & vk::QueueFlagBits::eGraphics) {
+            gfxQueueFamilyIdx = i;
             break;
         }
     }
@@ -125,6 +128,23 @@ auto main(int argc, char *argv[]) -> int {
     };
     auto device = chk(physicalDevice.createDevice(deviceCI));
     auto queue = device.getQueue(gfxQueueFamilyIdx, 0);
+
+    VmaVulkanFunctions vkFunctions{
+        .vkGetInstanceProcAddr = vkGetInstanceProcAddr,
+        .vkGetDeviceProcAddr = vkGetDeviceProcAddr,
+        .vkCreateImage = vkCreateImage,
+    };
+
+    VmaAllocatorCreateInfo allocatorCI{
+        .flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT,
+        .physicalDevice = *physicalDevice,
+        .device = *device,
+        .pVulkanFunctions = &vkFunctions,
+        .instance = *instance,
+    };
+
+    VmaAllocator allocator;
+    chk(vmaCreateAllocator(&allocatorCI, &allocator));
 
     SDL_Vulkan_UnloadLibrary();
     SDL_Quit();
