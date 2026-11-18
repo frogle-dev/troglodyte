@@ -63,10 +63,15 @@
           ];
 
           VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
-          LD_LIBRARY_PATH = "${
-            pkgs.lib.makeLibraryPath [ pkgs.vulkan-loader ]
-          }\${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}";
           VULKAN_SDK = "${pkgs.vulkan-headers}";
+
+          shellHook = ''
+            export LD_LIBRARY_PATH="/run/opengl-driver/lib"
+          '';
+
+          # export LD_LIBRARY_PATH = "${
+          #   pkgs.lib.makeLibraryPath [ pkgs.vulkan-loader ]
+          # }''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
           hardeningDisable = [ "fortify" ];
         };
