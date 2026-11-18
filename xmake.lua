@@ -30,4 +30,6 @@ add_packages(
 if is_mode("debug") then
   set_policy("build.sanitizer.address", true)
   set_policy("build.sanitizer.undefined", true)
+
+  add_runenvs("LSAN_OPTIONS", "suppressions=" .. path.join(os.scriptdir(), "lsan_suppressions.txt"))
 end

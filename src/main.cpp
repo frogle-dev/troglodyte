@@ -3,12 +3,8 @@
 #include <iostream>
 #include <print>
 
-#include <optional>
-
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
-
-#include <volk.h>
 
 #define VULKAN_HPP_NO_EXCEPTIONS
 #define VULKAN_HPP_NO_CONSTRUCTORS
@@ -25,6 +21,7 @@ static inline void chk(bool result) {
     }
 }
 
+[[maybe_unused]]
 static inline void chk(vk::Result result) {
     if (result != vk::Result::eSuccess) {
         std::println(std::cerr, "call returned a vulkan error: {}", vk::to_string(result));
@@ -42,13 +39,9 @@ template <typename T> static inline auto chk(vk::ResultValue<T> &&resultValue) -
     return std::move(resultValue.value);
 }
 
-static inline void chk(VkResult result) { chk(static_cast<vk::Result>(result)); }
-
 auto main() -> int {
     chk(SDL_Init(SDL_INIT_VIDEO));
     chk(SDL_Vulkan_LoadLibrary(nullptr));
-
-    chk(volkInitialize());
 
     vk::raii::Context context;
 
@@ -70,4 +63,7 @@ auto main() -> int {
     };
 
     vk::raii::Instance instance = chk(context.createInstance(instanceCI));
+
+    SDL_Vulkan_UnloadLibrary();
+    SDL_Quit();
 }
