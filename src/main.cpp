@@ -185,7 +185,7 @@ auto main(int argc, char *argv[]) -> int {
     auto swapchainImages = chk(swapchain.getImages());
 
     std::vector<vk::raii::ImageView> swapchainImageViews;
-    for (auto image : swapchainImages) {
+    for (auto &image : swapchainImages) {
         vk::ImageViewCreateInfo viewCI{
             .image = image,
             .viewType = vk::ImageViewType::e2D,
@@ -201,6 +201,54 @@ auto main(int argc, char *argv[]) -> int {
         swapchainImageViews.push_back(chk(device.createImageView(viewCI)));
     }
     assert(swapchainImageViews.size() == swapchainImages.size());
+
+    std::vector<vk::Format> depthFormats = {vk::Format::eD32SfloatS8Uint,
+                                            vk::Format::eD24UnormS8Uint};
+    vk::Format depthFormat = vk::Format::eUndefined;
+    for (auto &format : depthFormats) {
+        auto props = physicalDevice.getFormatProperties(format);
+
+        if (props.optimalTilingFeatures & vk::FormatFeatureFlagBits::eDepthStencilAttachment) {
+            depthFormat = format;
+            break;
+        }
+    }
+
+    vk::ImageCreateInfo depthImageCI{
+        .imageType = vk::ImageType::e2D,
+        .format = depthFormat,
+        .extent = {.width = swapchainExtent.width, .height = swapchainExtent.height, .depth = 1},
+        .mipLevels = 1,
+        .arrayLayers = 1,
+        .samples = vk::SampleCountFlagBits::e1,
+        .tiling = vk::ImageTiling::eOptimal,
+        .usage = vk::ImageUsageFlagBits::eDepthStencilAttachment,
+        .initialLayout = vk::ImageLayout::eUndefined,
+    };
+
+    VmaAllocationCreateInfo allocCI{
+        .flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT,
+        .usage = VMA_MEMORY_USAGE_AUTO,
+    };
+
+    VkImage cDepthImage;
+    VmaAllocation depthImageAllocation;
+    chk(vmaCreateImage(allocator, &(*depthImageCI), &allocCI, &cDepthImage, &depthImageAllocation,
+                       nullptr));
+
+    vk::Image depthImage(cDepthImage);
+
+    vk::ImageViewCreateInfo depthViewCI{
+        .image = depthImage,
+        .viewType = vk::ImageViewType::e2D,
+        .format = depthFormat,
+        .subresourceRange = {.aspectMask = vk::ImageAspectFlagBits::eDepth,
+                             .levelCount = 1,
+                             .layerCount = 1},
+    };
+    auto depthImageView = chk(device.createImageView(depthViewCI));
+
+    vmaDestroyImage(allocator, cDepthImage, depthImageAllocation);
 
     vmaDestroyAllocator(allocator);
 
