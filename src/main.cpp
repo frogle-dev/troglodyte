@@ -14,8 +14,8 @@
 
 #include <vk_mem_alloc.h>
 
-// constexpr int WIDTH = 800;
-// constexpr int HEIGHT = 800;
+constexpr int WIDTH = 800;
+constexpr int HEIGHT = 800;
 
 static inline void chk(bool result) {
     if (!result) {
@@ -145,6 +145,43 @@ auto main(int argc, char *argv[]) -> int {
 
     VmaAllocator allocator;
     chk(vmaCreateAllocator(&allocatorCI, &allocator));
+
+    SDL_Window *window =
+        SDL_CreateWindow("troglodyte", WIDTH, HEIGHT, SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
+
+    VkSurfaceKHR cSurface;
+    chk(SDL_Vulkan_CreateSurface(window, *instance, nullptr, &cSurface));
+    vk::raii::SurfaceKHR surface(instance, cSurface);
+
+    auto surfaceCaps = chk(physicalDevice.getSurfaceCapabilitiesKHR(surface));
+
+    int windowWidth = 0;
+    int windowHeight = 0;
+    chk(SDL_GetWindowSize(window, &windowWidth, &windowHeight));
+
+    vk::Extent2D swapchainExtent = surfaceCaps.currentExtent;
+    // on wayland an extent widht of 0xFFFFFFFF means that the surface size will be same as window
+    if (surfaceCaps.currentExtent.width == 0xFFFFFFFF) {
+        swapchainExtent = {
+            .width = static_cast<uint32_t>(windowWidth),
+            .height = static_cast<uint32_t>(windowHeight),
+        };
+    }
+
+    vk::Format const imageFormat = vk::Format::eB8G8R8A8Srgb;
+    vk::SwapchainCreateInfoKHR swapchainCI{
+        .surface = surface,
+        .minImageCount = surfaceCaps.minImageCount,
+        .imageFormat = imageFormat,
+        .imageColorSpace = vk::ColorSpaceKHR::eSrgbNonlinear,
+        .imageExtent = swapchainExtent,
+        .imageArrayLayers = 1,
+        .imageUsage = vk::ImageUsageFlagBits::eColorAttachment,
+        .preTransform = vk::SurfaceTransformFlagBitsKHR::eIdentity,
+        .compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque,
+        .presentMode = vk::PresentModeKHR::eFifo,
+    };
+    auto swapchain = chk(device.createSwapchainKHR(swapchainCI));
 
     SDL_Vulkan_UnloadLibrary();
     SDL_Quit();
