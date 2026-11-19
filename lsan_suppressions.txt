@@ -1,1 +1,9 @@
+# block against leaks from drivers and libraries, these leaks dont come from the program
+
 leak:libdbus-1.so
+
+leak:libxcb.so
+leak:libX11.so
+leak:libSDL3.so
+
+leak:libnvidia-glcore.so

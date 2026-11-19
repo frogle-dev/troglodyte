@@ -12,6 +12,7 @@
 #include <vulkan/vulkan.hpp>
 #include <vulkan/vulkan_raii.hpp>
 
+#define VMA_IMPLEMENTATION
 #include <vk_mem_alloc.h>
 
 constexpr int WIDTH = 800;
@@ -129,11 +130,9 @@ auto main(int argc, char *argv[]) -> int {
     auto device = chk(physicalDevice.createDevice(deviceCI));
     auto queue = device.getQueue(gfxQueueFamilyIdx, 0);
 
-    VmaVulkanFunctions vkFunctions{
-        .vkGetInstanceProcAddr = vkGetInstanceProcAddr,
-        .vkGetDeviceProcAddr = vkGetDeviceProcAddr,
-        .vkCreateImage = vkCreateImage,
-    };
+    VmaVulkanFunctions vkFunctions{};
+    vkFunctions.vkGetInstanceProcAddr = instance.getDispatcher()->vkGetInstanceProcAddr;
+    vkFunctions.vkGetDeviceProcAddr = device.getDispatcher()->vkGetDeviceProcAddr;
 
     VmaAllocatorCreateInfo allocatorCI{
         .flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT,
@@ -182,6 +181,30 @@ auto main(int argc, char *argv[]) -> int {
         .presentMode = vk::PresentModeKHR::eFifo,
     };
     auto swapchain = chk(device.createSwapchainKHR(swapchainCI));
+
+    auto swapchainImages = chk(swapchain.getImages());
+
+    std::vector<vk::raii::ImageView> swapchainImageViews;
+    for (auto image : swapchainImages) {
+        vk::ImageViewCreateInfo viewCI{
+            .image = image,
+            .viewType = vk::ImageViewType::e2D,
+            .format = imageFormat,
+            .subresourceRange =
+                {
+                    .aspectMask = vk::ImageAspectFlagBits::eColor,
+                    .levelCount = 1,
+                    .layerCount = 1,
+                },
+        };
+
+        swapchainImageViews.push_back(chk(device.createImageView(viewCI)));
+    }
+    assert(swapchainImageViews.size() == swapchainImages.size());
+
+    vmaDestroyAllocator(allocator);
+
+    SDL_DestroyWindow(window);
 
     SDL_Vulkan_UnloadLibrary();
     SDL_Quit();

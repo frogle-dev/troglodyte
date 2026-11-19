@@ -29,9 +29,17 @@ add_packages(
   "libsdl3"
 )
 
+add_defines(
+  "VMA_STATIC_VULKAN_FUNCTIONS=0",
+  "VMA_DYNAMIC_VULKAN_FUNCTIONS=1"
+)
+
+
 if is_mode("debug") then
   set_policy("build.sanitizer.address", true)
   set_policy("build.sanitizer.undefined", true)
 
-  add_runenvs("LSAN_OPTIONS", "suppressions=" .. path.join(os.scriptdir(), "lsan_suppressions.txt"))
+  set_runenv("LD_PRELOAD", path.join(os.scriptdir(), "libnodlclose.so"))
+  add_runenvs("LSAN_OPTIONS",
+    "suppressions=" .. path.join(os.scriptdir(), "lsan_suppressions.txt"))
 end
