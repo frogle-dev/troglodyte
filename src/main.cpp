@@ -15,6 +15,11 @@
 #define VMA_IMPLEMENTATION
 #include <vk_mem_alloc.h>
 
+#include <glm/glm.hpp>
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
 constexpr int WIDTH = 800;
 constexpr int HEIGHT = 800;
 
@@ -43,6 +48,12 @@ template <typename T> static inline auto chk(vk::ResultValue<T> &&resultValue) -
 
     return std::move(resultValue.value);
 }
+
+struct Vertex {
+    glm::vec3 pos;
+    glm::vec3 normal;
+    glm::vec2 uv;
+};
 
 auto main(int argc, char *argv[]) -> int {
     chk(SDL_Init(SDL_INIT_VIDEO));
@@ -248,6 +259,53 @@ auto main(int argc, char *argv[]) -> int {
     };
     auto depthImageView = chk(device.createImageView(depthViewCI));
 
+    tinyobj::attrib_t attrib;
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
+    chk(tinyobj::LoadObj(&attrib, &shapes, &materials, nullptr, nullptr, "suzanne.obj"));
+
+    // vk::DeviceSize const indexCount = shapes[0].mesh.indices.size();
+    std::vector<Vertex> vertices;
+    std::vector<uint16_t> indices;
+    for (tinyobj::index_t &index : shapes[0].mesh.indices) {
+        Vertex vert{
+            .pos = {attrib.vertices[index.vertex_index * 3],
+                    -attrib.vertices[index.vertex_index * 3 + 1],
+                    attrib.vertices[index.vertex_index * 3 + 2]},
+            .normal = {attrib.normals[index.normal_index * 3],
+                       -attrib.normals[index.normal_index * 3 + 1],
+                       attrib.normals[index.normal_index * 3 + 2]},
+            .uv = {attrib.texcoords[index.texcoord_index * 2],
+                   1.0 - attrib.texcoords[index.texcoord_index * 2 + 1]},
+        };
+
+        vertices.push_back(vert);
+        indices.push_back(indices.size());
+    }
+
+    vk::DeviceSize vBufSize = sizeof(Vertex) * vertices.size();
+    vk::DeviceSize iBufSize = sizeof(uint16_t) * vertices.size();
+    vk::BufferCreateInfo bufferCI{
+        .size = vBufSize + iBufSize,
+        .usage = vk::BufferUsageFlagBits::eVertexBuffer | vk::BufferUsageFlagBits::eIndexBuffer,
+    };
+
+    VmaAllocationCreateInfo vBufferAllocCI{
+        .flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT |
+                 VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT |
+                 VMA_ALLOCATION_CREATE_MAPPED_BIT,
+        .usage = VMA_MEMORY_USAGE_AUTO,
+    };
+
+    VkBuffer cVBuffer;
+    VmaAllocation vBufferAlloc;
+    VmaAllocationInfo vBufferAllocInfo;
+    chk(vmaCreateBuffer(allocator, &(*bufferCI), &vBufferAllocCI, &cVBuffer, &vBufferAlloc,
+                        &vBufferAllocInfo));
+
+    vk::Buffer vBuffer(cVBuffer);
+
+    vmaDestroyBuffer(allocator, vBuffer, vBufferAlloc);
     vmaDestroyImage(allocator, cDepthImage, depthImageAllocation);
 
     vmaDestroyAllocator(allocator);
