@@ -291,9 +291,10 @@ auto main(int argc, char *argv[]) -> int {
     };
 
     VmaAllocationCreateInfo vBufferAllocCI{
+        // first 2 flags give memory that is on the gpu but accessible to the cpu
         .flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT |
                  VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT |
-                 VMA_ALLOCATION_CREATE_MAPPED_BIT,
+                 VMA_ALLOCATION_CREATE_MAPPED_BIT, // mapped allows to memcpy directly into the vram
         .usage = VMA_MEMORY_USAGE_AUTO,
     };
 
@@ -304,6 +305,9 @@ auto main(int argc, char *argv[]) -> int {
                         &vBufferAllocInfo));
 
     vk::Buffer vBuffer(cVBuffer);
+
+    memcpy(vBufferAllocInfo.pMappedData, vertices.data(), vBufSize);
+    memcpy(((char *)vBufferAllocInfo.pMappedData) + vBufSize, indices.data(), iBufSize);
 
     vmaDestroyBuffer(allocator, vBuffer, vBufferAlloc);
     vmaDestroyImage(allocator, cDepthImage, depthImageAllocation);
